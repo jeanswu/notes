@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { width:1080px; background:#fff;
+    font-family:'Noto Sans Thai','Noto Sans CJK SC',sans-serif;
+    -webkit-font-smoothing:antialiased; }
+  .sec { width:1080px; position:relative; overflow:hidden; }
+  .mult { mix-blend-mode:multiply; }
+
+  /* S1 封面 */
+  #s1 { height:1280px; background:#fff; }
+  #s1 .bg { position:absolute; top:0; left:0; right:0; height:716px;
+    background:url('../C组场景_20261028/C3_装车场景_1080_171614.jpg') center 52%/cover no-repeat; }
+  #s1 .fade { position:absolute; top:626px; left:0; right:0; height:90px;
+    background:linear-gradient(180deg, rgba(255,255,255,0) 0%, #fff 100%); }
+  #s1 .txt { position:absolute; top:700px; left:84px; right:84px; }
+  #s1 .tag { display:inline-block; padding:9px 22px; background:#F1F1EE; border-radius:100px;
+    font-size:27px; color:#444; font-weight:500; }
+  #s1 h1 { margin-top:24px; font-size:76px; font-weight:900; color:#111; line-height:1.28; letter-spacing:-1px; }
+  #s1 .q2 { margin-top:12px; font-size:39px; color:#666; line-height:1.45; }
+  #s1 .line { width:84px; height:5px; background:#E8632A; margin:26px 0 20px; }
+  #s1 .ans { font-size:41px; font-weight:700; color:#111; line-height:1.42; }
+
+  /* S2 硬挺 */
+  #s2 { height:1080px; background:#fff; }
+  #s2 h2 { position:absolute; top:62px; left:0; right:0; text-align:center;
+    font-size:70px; font-weight:900; color:#111; line-height:1.32; letter-spacing:-.5px; }
+  #s2 .ph { position:absolute; top:282px; left:0; right:0; height:562px;
+    background:url('E1_crop.jpg') center 50%/contain no-repeat; }
+  #s2 .foot { position:absolute; top:872px; left:84px; right:84px; text-align:center;
+    font-size:35px; color:#555; line-height:1.55; }
+
+  /* S3 折叠 */
+  #s3 { height:1080px; background:#F4F4F1; }
+  #s3 .num { position:absolute; top:52px; left:0; right:0; text-align:center;
+    font-size:126px; font-weight:900; color:#E8632A; line-height:1.0; letter-spacing:-2px; }
+  #s3 .lab { position:absolute; top:180px; left:0; right:0; text-align:center;
+    font-size:43px; font-weight:700; color:#222; }
+  #s3 .ph { position:absolute; top:258px; left:0; right:0; height:646px;
+    background:url('D3_crop.jpg') center 50%/contain no-repeat; }
+  #s3 .foot { position:absolute; top:940px; left:84px; right:84px; text-align:center;
+    font-size:33px; color:#666; line-height:1.5; }
+
+  /* S4 容量 */
+  #s4 { height:1080px; background:#F4F4F1; }
+  #s4 .num { position:absolute; top:54px; left:0; right:0; text-align:center;
+    font-size:116px; font-weight:900; color:#E8632A; line-height:1.0; letter-spacing:-2px; }
+  #s4 .lab { position:absolute; top:174px; left:0; right:0; text-align:center;
+    font-size:40px; font-weight:700; color:#222; }
+  #s4 .ph { position:absolute; top:246px; left:0; right:0; height:642px;
+    background:url('../A组_20261029/B1_展开装满_1080.jpg') center 50%/contain no-repeat; }
+  #s4 .foot { position:absolute; top:918px; left:80px; right:80px; text-align:center;
+    font-size:32px; color:#666; line-height:1.5; }
+
+  /* S5 细节 */
+  #s5 { height:1080px; background:#fff; }
+  #s5 .ph { position:absolute; top:0; left:0; right:0; height:604px;
+    background:url('../A组_20261029/A0_主图_正面全貌_纯产品_1080.jpg') center 50%/contain no-repeat; }
+  #s5 .list { position:absolute; top:632px; left:84px; right:84px;
+    display:grid; grid-template-columns:1fr 1fr; gap:44px 44px; }
+  #s5 .it { display:flex; gap:16px; align-items:flex-start; }
+  #s5 .dot { flex:0 0 auto; width:13px; height:13px; border-radius:50%; background:#E8632A; margin-top:16px; }
+  #s5 .tx { font-size:31px; color:#2b2b2b; line-height:1.58; }
+
+  /* S6 规格 */
+  #s6 { height:1080px; background:#F4F4F1; padding:126px 90px; }
+  #s6 table { width:100%; border-collapse:collapse; background:#fff; border-radius:18px; overflow:hidden; }
+  #s6 th { background:#111; color:#fff; font-size:32px; font-weight:700; padding:30px 34px; text-align:left; }
+  #s6 td { font-size:31px; padding:29px 34px; border-bottom:1px solid #ECECE8; color:#222; }
+  #s6 td.k { color:#666; width:44%; font-weight:400; }
+  #s6 td.v { font-weight:700; }
+  #s6 tr:last-child td { border-bottom:none; }
+
+  /* S7 收尾 */
+  #s7 { height:1080px; background:#fff; }
+  #s7 .top { position:absolute; top:246px; left:84px; right:84px; text-align:center; }
+  #s7 .lbl { font-size:30px; color:#AAA; letter-spacing:1px; }
+  #s7 h2 { margin-top:18px; font-size:96px; font-weight:900; color:#111; line-height:1.2; letter-spacing:-1.5px; }
+  #s7 .body { position:absolute; top:482px; left:84px; right:84px; text-align:center;
+    font-size:41px; color:#333; line-height:1.95; }
+  #s7 .hl { margin-top:44px; font-size:44px; font-weight:700; color:#E8632A; }
+  #s7 .bar { position:absolute; bottom:0; left:0; right:0; height:196px; background:#111;
+    display:flex; align-items:center; justify-content:center; }
+  #s7 .bar span { font-size:38px; font-weight:700; color:#fff; }
+  #s7 .bar i { font-style:normal; font-size:34px; color:#5a5a5a; margin:0 32px; }
+</style>
+</head>
+<body>
+
+<!-- S1 封面 · 痛点 -->
+<div class="sec" id="s1">
+  <div class="bg"></div>
+  <div class="fade"></div>
+  <div class="txt">
+    <div class="tag">35 × 35 × 30 ซม. &nbsp;·&nbsp; 36 ลิตร &nbsp;·&nbsp; 0.96 กก.</div>
+    <h1>ท้ายรถเต็มไปด้วย<br>สิ่งของกระจัดกระจาย?</h1>
+    <div class="q2">เบรกแล้วของเลื่อนมากองรวมกัน?</div>
+    <div class="line"></div>
+    <div class="ans">กล่องจัดระเบียบท้ายรถ<br>ที่ออกแบบมาสำหรับรถเก๋ง</div>
+  </div>
+</div>
+
+<!-- S2 硬挺不易塌 -->
+<div class="sec" id="s2">
+  <h2>แข็งแรง<br>ไม่ยุบตัวง่าย</h2>
+  <div class="ph"></div>
+  <div class="foot">ผนังทั้ง 4 ด้านเสริมด้วยแผ่น PP หนา 2.5 มม.<br>พร้อมแผ่นรองก้นแข็งถอดได้</div>
+</div>
+
+<!-- S3 折叠反差（不写厚度数字，2026-11-05 改） -->
+<div class="sec" id="s3">
+  <div class="num">บาง</div>
+  <div class="lab">พับบาง ไม่เกะกะเมื่อไม่ใช้งาน</div>
+  <div class="ph mult"></div>
+  <div class="foot">น้ำหนักประมาณ 0.96 กก. &nbsp;·&nbsp; ยกขึ้น–ลงได้สะดวก</div>
+</div>
+
+<!-- S4 容量 -->
+<div class="sec" id="s4">
+  <div class="num">36 ลิตร</div>
+  <div class="lab">ความจุประมาณ 36 ลิตร</div>
+  <div class="ph mult"></div>
+  <div class="foot">จัดเก็บของใช้ทั่วไปภายในรถ ของใช้เด็ก อุปกรณ์ดูแลรถ<br>สัมภาระเดินทาง และของใช้ในบ้าน</div>
+</div>
+
+<!-- S5 细节 -->
+<div class="sec" id="s5">
+  <div class="ph"></div>
+  <div class="list">
+    <div class="it"><div class="dot"></div><div class="tx">ฝาปิดแบบตีนตุ๊กแก เปิด–ปิดสะดวก ไม่มีซิปติดขัด</div></div>
+    <div class="it"><div class="dot"></div><div class="tx">กระเป๋าด้านหน้า 2 ช่อง และช่องตาข่าย สำหรับแยกของชิ้นเล็ก</div></div>
+    <div class="it"><div class="dot"></div><div class="tx">แถบสะท้อนแสง ช่วยให้สังเกตเห็นได้ง่ายขึ้นในที่แสงน้อย</div></div>
+    <div class="it"><div class="dot"></div><div class="tx">ห่วงตัว D โลหะ และมือจับอลูมิเนียมรูปตัว U หุ้มหนัง จับถนัดมือ</div></div>
+  </div>
+</div>
+
+<!-- S6 规格 -->
+<div class="sec" id="s6">
+  <table>
+    <tr><th style="width:44%">รายการ</th><th>ค่า</th></tr>
+    <tr><td class="k">ขนาดกางออก</td><td class="v">35 × 35 × 30 ซม.</td></tr>
+    <tr><td class="k">ความจุ</td><td class="v">ประมาณ 36 ลิตร</td></tr>
+    <tr><td class="k">ขนาดเมื่อพับ</td><td class="v">35 × 35 × 5 ซม.</td></tr>
+    <tr><td class="k">น้ำหนัก</td><td class="v">ประมาณ 0.96 กก.</td></tr>
+    <tr><td class="k">สี</td><td class="v">ดำ</td></tr>
+    <tr><td class="k">วัสดุ</td><td class="v">ผ้า Oxford 600D + แผ่น PP หนา 2.5 มม.</td></tr>
+  </table>
+</div>
+
+<!-- S7 场景收尾 -->
+<div class="sec" id="s7">
+  <div class="top">
+    <div class="lbl">35 × 35 × 30 ซม. &nbsp;·&nbsp; 36 ลิตร &nbsp;·&nbsp; 0.96 กก.</div>
+    <h2>เหมาะสำหรับ</h2>
+  </div>
+  <div class="body">
+    จัดเก็บของใช้ทั่วไปภายในรถ · ของใช้เด็ก<br>
+    อุปกรณ์ดูแลรถ · สัมภาระเดินทาง · ของใช้ในบ้าน
+    <div class="hl">สีดำสุภาพ เข้ากับห้องโดยสาร</div>
+  </div>
+  <div class="bar">
+    <span>35 × 35 × 30 ซม.</span><i>|</i><span>36 ลิตร</span><i>|</i><span>0.96 กก.</span>
+  </div>
+</div>
+
+</body>
+</html>

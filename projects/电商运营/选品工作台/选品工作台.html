@@ -1,0 +1,858 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>1688广东工厂选品工作台 · 供应商评分榜</title>
+<style>
+:root{
+  --canvas:#f6f2ec; --surface:#fffdf9; --surface-2:#faf6ef;
+  --ink:#27231d; --ink-2:#6f675b; --ink-3:#948b7c;
+  --line:#e7e0d4; --line-strong:#d8cfbf;
+  --accent:#d9531e; --accent-deep:#b8410f; --accent-ink:#fff;
+  --good:#2f7d52; --good-bg:#e7f2ea;
+  --warn:#b06f08; --warn-bg:#faf0dc;
+  --cold:#6b7280; --cold-bg:#eceef1;
+  --radius:10px; --radius-sm:6px;
+  --font-sans:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI","PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif;
+  --font-mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--canvas);color:var(--ink);font-family:var(--font-sans);
+  font-size:15px;line-height:1.65;}
+.wrap{max-width:1240px;margin:0 auto;padding:clamp(20px,4vw,48px) clamp(16px,4vw,40px) 64px;}
+/* ===== Header ===== */
+header.masthead{border-bottom:3px solid var(--ink);padding-bottom:22px;margin-bottom:30px;}
+.kicker{font-size:13px;letter-spacing:.14em;color:var(--accent);font-weight:700;margin:0 0 8px;}
+h1{font-size:clamp(26px,4vw,40px);line-height:1.15;margin:0 0 14px;letter-spacing:-.01em;font-weight:800;}
+.subtitle{color:var(--ink-2);max-width:760px;margin:0;font-size:15.5px;}
+.stats{display:flex;flex-wrap:wrap;gap:10px;margin-top:20px;}
+.stat{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-sm);
+  padding:9px 15px;font-size:13.5px;color:var(--ink-2);}
+.stat b{color:var(--ink);font-size:18px;font-family:var(--font-mono);margin-right:4px;font-weight:700;}
+/* ===== Section ===== */
+section{margin-bottom:46px;}
+h2{font-size:clamp(19px,2.4vw,24px);margin:0 0 6px;font-weight:800;letter-spacing:-.01em;
+  display:flex;align-items:baseline;gap:10px;}
+h2 .no{font-family:var(--font-mono);color:var(--accent);font-size:.78em;font-weight:700;}
+.sec-desc{color:var(--ink-2);margin:0 0 20px;font-size:14px;max-width:820px;}
+/* ===== Filter ===== */
+.filters{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;}
+button.filter{font-family:inherit;font-size:13.5px;font-weight:600;cursor:pointer;
+  border:1.5px solid var(--line-strong);background:var(--surface);color:var(--ink-2);
+  padding:7px 15px;border-radius:999px;transition:border-color .15s,color .15s,background .15s;}
+button.filter:hover{border-color:var(--accent);color:var(--accent);}
+button.filter[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff;}
+/* ===== Bar chart ===== */
+.bar-list{display:flex;flex-direction:column;gap:7px;}
+.bar-row{display:grid;grid-template-columns:34px 1fr;gap:14px;align-items:center;
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:11px 16px;}
+.bar-rank{font-family:var(--font-mono);font-weight:700;font-size:17px;color:var(--ink-3);text-align:center;}
+.bar-row:nth-child(-n+3) .bar-rank{color:var(--accent);font-size:20px;}
+.bar-main{min-width:0;}
+.bar-top{display:flex;align-items:baseline;gap:10px;flex-wrap:wrap;margin-bottom:6px;}
+.bar-name{font-weight:700;font-size:16px;}
+.bar-cat{color:var(--ink-3);font-size:12.5px;}
+.bar-score{margin-left:auto;font-family:var(--font-mono);font-weight:800;font-size:20px;color:var(--ink);}
+.bar-track{height:9px;background:var(--surface-2);border-radius:99px;overflow:hidden;border:1px solid var(--line);}
+.bar-fill{height:100%;border-radius:99px;transform-origin:left;transition:width .6s cubic-bezier(.2,.7,.2,1);}
+.fill-pass{background:linear-gradient(90deg,#3a9162,#2f7d52);}
+.fill-test{background:linear-gradient(90deg,#d99a2b,#b06f08);}
+.fill-bench{background:repeating-linear-gradient(45deg,#9aa1ab,#9aa1ab 5px,#b6bcc4 5px,#b6bcc4 10px);}
+/* ===== Tags & medals ===== */
+.tag{display:inline-block;font-size:11.5px;font-weight:700;padding:2px 9px;border-radius:999px;white-space:nowrap;}
+.tag-pass{background:var(--good-bg);color:var(--good);}
+.tag-test{background:var(--warn-bg);color:var(--warn);}
+.tag-bench{background:var(--cold-bg);color:var(--cold);}
+.medal{display:inline-block;font-size:11.5px;font-weight:700;padding:2px 8px;border-radius:5px;white-space:nowrap;}
+.medal-三钻{background:#fdecd8;color:#9a5a10;border:1px solid #f0c89a;}
+.medal-二钻{background:#eef1f4;color:#3f4a5a;border:1px solid #cfd7e0;}
+.medal-一钻{background:#f6efdd;color:#7a5e1e;border:1px solid #e2d2a4;}
+.medal-铜牌{background:#f3e9dd;color:#8a5a32;border:1px solid #ddc3a6;}
+.medal-牛头无牌{background:#eceef1;color:#6b7280;border:1px solid #d4d9e0;}
+/* ===== Table ===== */
+.table-scroll{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface);}
+table{border-collapse:collapse;width:100%;font-size:13.5px;min-width:1080px;}
+caption{text-align:left;font-size:13px;color:var(--ink-3);padding:12px 16px;border-bottom:1px solid var(--line);background:var(--surface-2);}
+th,td{padding:11px 13px;text-align:left;border-bottom:1px solid var(--line);vertical-align:top;}
+thead th{background:var(--surface-2);font-size:12.5px;font-weight:700;color:var(--ink-2);
+  position:sticky;top:0;border-bottom:2px solid var(--line-strong);white-space:nowrap;}
+tbody tr:hover{background:var(--surface-2);}
+.num{text-align:right;font-family:var(--font-mono);white-space:nowrap;}
+.strong{font-weight:700;}
+.big{font-size:17px;font-weight:800;color:var(--accent-deep);}
+.sticky-name{font-weight:700;min-width:130px;}
+.row-full{display:block;font-weight:400;font-size:11.5px;color:var(--ink-3);margin-top:2px;line-height:1.4;}
+.dim{color:var(--ink-2);font-size:12.5px;min-width:150px;}
+/* ===== Matrix ===== */
+.matrix{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:12px;}
+.mcard{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:15px 16px;border-left:4px solid var(--good);}
+.mcard.warn{border-left-color:var(--warn);}
+.mcard h3{margin:0 0 4px;font-size:15px;font-weight:800;}
+.mcard .pick{font-size:13.5px;margin:3px 0;}
+.mcard .pick b{color:var(--ink);}
+.mcard .pick span.pct{font-family:var(--font-mono);color:var(--good);font-weight:700;font-size:12.5px;}
+.mcard .pick.alt span.pct{color:var(--ink-2);}
+.mcard .pick.alt b{color:var(--ink-2);font-weight:600;}
+/* ===== Callouts ===== */
+.callout{border-radius:var(--radius);padding:16px 18px;margin-bottom:14px;font-size:14px;}
+.callout.accent{background:#fdeee5;border:1px solid #f4cdb4;}
+.callout.warn{background:var(--warn-bg);border:1px solid #ecd6ab;}
+.callout h3{margin:0 0 7px;font-size:15px;}
+.callout p{margin:6px 0;}
+/* ===== Lists ===== */
+ul.tight{margin:8px 0;padding-left:20px;}
+ul.tight li{margin:6px 0;}
+.levers{display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:12px;}
+.lever{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;}
+.lever .lname{font-weight:800;font-size:14.5px;}
+.lever .ldir{color:var(--accent);font-size:12px;font-weight:700;margin:2px 0 6px;}
+.lever p{margin:0;font-size:13px;color:var(--ink-2);}
+/* ===== Inquiry checklist ===== */
+.inq-group{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px 20px;margin-bottom:14px;}
+.inq-group h3{margin:0 0 10px;font-size:15.5px;display:flex;align-items:center;gap:8px;}
+.inq-group h3 .g-tag{font-size:11.5px;font-weight:700;padding:2px 9px;border-radius:999px;}
+.chk{display:flex;gap:11px;align-items:flex-start;padding:7px 0;border-bottom:1px dashed var(--line);font-size:14px;}
+.chk:last-child{border-bottom:0;}
+.chk .box{flex:none;width:17px;height:17px;border:2px solid var(--line-strong);border-radius:4px;margin-top:2px;}
+.chk b{font-weight:700;}
+.chk .meta{color:var(--ink-3);font-size:12.5px;}
+/* ===== Model ===== */
+.weights{display:flex;flex-wrap:wrap;gap:8px;}
+.wchip{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius-sm);padding:7px 13px;font-size:13px;}
+.wchip b{font-family:var(--font-mono);color:var(--accent-deep);}
+.note{font-size:13px;color:var(--ink-3);margin-top:12px;}
+footer{border-top:2px solid var(--line-strong);margin-top:40px;padding-top:18px;font-size:12.5px;color:var(--ink-3);}
+.is-hidden{display:none !important;}
+@media (max-width:640px){
+  .bar-row{grid-template-columns:26px 1fr;gap:9px;padding:10px 12px;}
+  .bar-score{font-size:17px;}
+  .bar-cat{display:none;}
+}
+@media print{
+  body{background:#fff;font-size:12px;}
+  .filters{display:none;}
+  .bar-row,.mcard,.inq-group,.lever{break-inside:avoid;border-color:#ccc;}
+  section{margin-bottom:28px;}
+  .table-scroll{overflow:visible;}
+  table{min-width:0;font-size:11px;}
+}
+@media (prefers-reduced-motion:reduce){
+  .bar-fill{transition:none;}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="masthead">
+  <p class="kicker">1688 广东珠三角 · 供应链筛选 · 任务二</p>
+  <h1>工厂选品工作台 · 供应商评分榜</h1>
+  <p class="subtitle">按「广东 + 一件代发 + 48小时发货 + 销量排序」扫榜，10个选品方向建档 <b>208 家</b>，逐项核验诚信年限、牌级认证、响应/履约/回头率与深度验厂实拍，最终 <b>18 家深核厂</b>进入统一百分制评分。数据截至 2026-09-16。</p>
+  <div class="stats">
+    <span class="stat"><b>10</b>选品方向</span>
+    <span class="stat"><b>208</b>建档条目</span>
+    <span class="stat"><b>13</b>7/7 全过硬过线</span>
+    <span class="stat"><b>4</b>待询盘实测</span>
+    <span class="stat"><b>1</b>差异化备胎</span>
+    <span class="stat"><b>5</b>跨方向复用厂</span>
+  </div>
+</header>
+
+<section id="ranking">
+  <h2><span class="no">01</span>综合评分榜</h2>
+  <p class="sec-desc">100 分制，权重见文末模型。横条长度=总分；绿色为 7 项全过硬过线，琥珀为响应率 83–84% 待询盘实测（按 85 条件分给参考分），灰色斜纹为不达标备胎。点筛选可切换。</p>
+  <div class="filters" role="group" aria-label="按状态筛选">
+    <button class="filter" data-f="all" aria-pressed="true">全部 18 家</button>
+    <button class="filter" data-f="pass" aria-pressed="false">7/7 全过</button>
+    <button class="filter" data-f="test" aria-pressed="false">待询盘实测</button>
+    <button class="filter" data-f="bench" aria-pressed="false">备胎</button>
+  </div>
+  <div class="bar-list">
+    
+      <div class="bar-row" data-tag="pass">
+        <div class="bar-rank">1</div>
+        <div class="bar-main">
+          <div class="bar-top">
+            <span class="bar-name">业德品诚</span>
+            <span class="tag tag-pass">7/7 全过</span>
+            <span class="bar-cat">不锈钢刀叉勺餐具</span>
+            <span class="bar-score">82.2</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill fill-pass" style="width:82.2%"></div></div>
+        </div>
+      </div>
+      <div class="bar-row" data-tag="pass">
+        <div class="bar-rank">2</div>
+        <div class="bar-main">
+          <div class="bar-top">
+            <span class="bar-name">腾烨</span>
+            <span class="tag tag-pass">7/7 全过</span>
+            <span class="bar-cat">厨房置物架 · 吸盘置物架</span>
+            <span class="bar-score">81.4</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill fill-pass" style="width:81.4%"></div></div>
+        </div>
+      </div>
+      <div class="bar-row" data-tag="pass">
+        <div class="bar-rank">3</div>
+        <div class="bar-main">
+          <div class="bar-top">
+            <span class="bar-name">太力</span>
+            <span class="tag tag-pass">7/7 全过</span>
+            <span class="bar-cat">布艺箱 · 压缩袋 · 密封罐 · 吸盘</span>
+            <span class="bar-score">80.5</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill fill-pass" style="width:80.5%"></div></div>
+        </div>
+      </div>
+      <div class="bar-row" data-tag="pass">
+        <div class="bar-rank">4</div>
+        <div class="bar-main">
+          <div class="bar-top">
+            <span class="bar-name">艾佳</span>
+            <span class="tag tag-pass">7/7 全过</span>
+            <span class="bar-cat">密封储物罐（不锈钢线）</span>
+            <span class="bar-score">80.3</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill fill-pass" style="width:80.3%"></div></div>
+        </div>
+      </div>
+      <div class="bar-row" data-tag="pass">
+        <div class="bar-rank">5</div>
+        <div class="bar-main">
+          <div class="bar-top">
+            <span class="bar-name">新佩尔森</span>
+            <span class="tag tag-pass">7/7 全过</span>
+            <span class="bar-cat">陶瓷餐具套装 · 陶瓷杯碗</span>
+            <span class="bar-score">79.9</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill fill-pass" style="width:79.9%"></div></div>
+        </div>
+      </div>
+      <div class="bar-row" data-tag="pass">
+        <div class="bar-rank">6</div>
+        <div class="bar-main">
+          <div class="bar-top">
+            <span class="bar-name">火之狐</span>
+            <span class="tag tag-pass">7/7 全过</span>
+            <span class="bar-cat">不锈钢餐具（走量设计款）</span>
+            <span class="bar-score">79.7</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill fill-pass" style="width:79.7%"></div></div>
+        </div>
+      </div>
+      <div class="bar-row" data-tag="pass">
+        <div class="bar-rank">7</div>
+        <div class="bar-main">
+          <div class="bar-top">
+            <span class="bar-name">悠优</span>
+            <span class="tag tag-pass">7/7 全过</span>
+            <span class="bar-cat">冰箱收纳盒（硅胶线）</span>
+            <span class="bar-score">79.1</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill fill-pass" style="width:79.1%"></div></div>
+        </div>
+      </div>
+      <div class="bar-row" data-tag="pass">
+        <div class="bar-rank">8</div>
+        <div class="bar-main">
+          <div class="bar-top">
+            <span class="bar-name">盛兆</span>
+            <span class="tag tag-pass">7/7 全过</span>
+            <span class="bar-cat">保冷杯 · 塑料杯（全价位）</span>
+            <span class="bar-score">78.0</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill fill-pass" style="width:78.0%"></div></div>
+        </div>
+      </div>
+      <div class="bar-row" data-tag="pass">
+        <div class="bar-rank">9</div>
+        <div class="bar-main">
+          <div class="bar-top">
+            <span class="bar-name">白塔瓷五厂</span>
+            <span class="tag tag-pass">7/7 全过</span>
+            <span class="bar-cat">陶瓷餐具套装</span>
+            <span class="bar-score">77.4</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill fill-pass" style="width:77.4%"></div></div>
+        </div>
+      </div>
+      <div class="bar-row" data-tag="pass">
+        <div class="bar-rank">10</div>
+        <div class="bar-main">
+          <div class="bar-top">
+            <span class="bar-name">家之旺</span>
+            <span class="tag tag-pass">7/7 全过</span>
+            <span class="bar-cat">厨房置物架 · 吸盘置物架</span>
+            <span class="bar-score">76.0</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill fill-pass" style="width:76.0%"></div></div>
+        </div>
+      </div>
+      <div class="bar-row" data-tag="test">
+        <div class="bar-rank">11</div>
+        <div class="bar-main">
+          <div class="bar-top">
+            <span class="bar-name">蓝天</span>
+            <span class="tag tag-test">待询盘实测</span>
+            <span class="bar-cat">收纳盒（塑料）</span>
+            <span class="bar-score">73.8</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill fill-test" style="width:73.8%"></div></div>
+        </div>
+      </div>
+      <div class="bar-row" data-tag="test">
+        <div class="bar-rank">12</div>
+        <div class="bar-main">
+          <div class="bar-top">
+            <span class="bar-name">丹特美</span>
+            <span class="tag tag-test">待询盘实测</span>
+            <span class="bar-cat">保冷杯（低价走量款）</span>
+            <span class="bar-score">73.7</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill fill-test" style="width:73.7%"></div></div>
+        </div>
+      </div>
+      <div class="bar-row" data-tag="pass">
+        <div class="bar-rank">13</div>
+        <div class="bar-main">
+          <div class="bar-top">
+            <span class="bar-name">新诗图</span>
+            <span class="tag tag-pass">7/7 全过</span>
+            <span class="bar-cat">免打孔挂钩（全材质）</span>
+            <span class="bar-score">72.2</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill fill-pass" style="width:72.2%"></div></div>
+        </div>
+      </div>
+      <div class="bar-row" data-tag="pass">
+        <div class="bar-rank">14</div>
+        <div class="bar-main">
+          <div class="bar-top">
+            <span class="bar-name">乐兴</span>
+            <span class="tag tag-pass">7/7 全过</span>
+            <span class="bar-cat">布艺收纳箱</span>
+            <span class="bar-score">72.0</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill fill-pass" style="width:72.0%"></div></div>
+        </div>
+      </div>
+      <div class="bar-row" data-tag="test">
+        <div class="bar-rank">15</div>
+        <div class="bar-main">
+          <div class="bar-top">
+            <span class="bar-name">皇星</span>
+            <span class="tag tag-test">待询盘实测</span>
+            <span class="bar-cat">保冷杯（中高端/母婴跨境）</span>
+            <span class="bar-score">71.1</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill fill-test" style="width:71.1%"></div></div>
+        </div>
+      </div>
+      <div class="bar-row" data-tag="pass">
+        <div class="bar-rank">16</div>
+        <div class="bar-main">
+          <div class="bar-top">
+            <span class="bar-name">爱优汇</span>
+            <span class="tag tag-pass">7/7 全过</span>
+            <span class="bar-cat">密封罐 · 冰箱盒 · 塑料挂钩</span>
+            <span class="bar-score">70.1</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill fill-pass" style="width:70.1%"></div></div>
+        </div>
+      </div>
+      <div class="bar-row" data-tag="bench">
+        <div class="bar-rank">17</div>
+        <div class="bar-main">
+          <div class="bar-top">
+            <span class="bar-name">台山光速</span>
+            <span class="tag tag-bench">备胎</span>
+            <span class="bar-cat">冷变铝杯（差异化独家品类）</span>
+            <span class="bar-score">68.4</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill fill-bench" style="width:68.4%"></div></div>
+        </div>
+      </div>
+      <div class="bar-row" data-tag="test">
+        <div class="bar-rank">18</div>
+        <div class="bar-main">
+          <div class="bar-top">
+            <span class="bar-name">心雅</span>
+            <span class="tag tag-test">待询盘实测</span>
+            <span class="bar-cat">免打孔挂钩（不锈钢线）</span>
+            <span class="bar-score">67.0</span>
+          </div>
+          <div class="bar-track"><div class="bar-fill fill-test" style="width:67.0%"></div></div>
+        </div>
+      </div>
+  </div>
+</section>
+
+<section id="detail">
+  <h2><span class="no">02</span>明细数据</h2>
+  <p class="sec-desc">全维度原始指标与评分。手机端可左右滑动；名称下方为工商/进店实名。带 ⚠ 的待实测厂家，响应率以询盘实测值为准并会重算排名。</p>
+  <div class="table-scroll">
+    <table>
+      <caption>18 家深核供应商全指标明细（评分项中 综合/品质 为 5 分制，总分为 100 分制）</caption>
+      <thead>
+        <tr>
+          <th scope="col">#</th><th scope="col">厂家</th><th scope="col">覆盖方向</th><th scope="col">城市</th>
+          <th scope="col">响应率</th><th scope="col">履约率</th><th scope="col">回头率</th>
+          <th scope="col">牌级</th><th scope="col">综合</th><th scope="col">品质</th>
+          <th scope="col">定制合约</th><th scope="col">意向客户</th><th scope="col">年限</th>
+          <th scope="col">总分</th><th scope="col">状态</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr data-tag="pass">
+          <td class="num">1</td>
+          <th scope="row" class="sticky-name">业德品诚<span class="row-full">揭阳市业德品诚金属制品有限公司</span></th>
+          <td class="dim">不锈钢刀叉勺餐具</td>
+          <td>揭阳</td>
+          <td class="num strong">96%</td>
+          <td class="num">100%</td>
+          <td class="num">58%</td>
+          <td><span class="medal medal-一钻">一钻</span></td>
+          <td class="num">5.0</td>
+          <td class="num">4.7</td>
+          <td class="num">20万+</td>
+          <td class="num">524</td>
+          <td class="num">12年</td>
+          <td class="num big">82.2</td>
+          <td><span class="tag tag-pass">全过</span></td>
+        </tr>
+        <tr data-tag="pass">
+          <td class="num">2</td>
+          <th scope="row" class="sticky-name">腾烨<span class="row-full">潮州市腾烨科技有限公司</span></th>
+          <td class="dim">厨房置物架 · 吸盘置物架</td>
+          <td>潮州</td>
+          <td class="num strong">98%</td>
+          <td class="num">100%</td>
+          <td class="num">53%</td>
+          <td><span class="medal medal-二钻">二钻</span></td>
+          <td class="num">5.0</td>
+          <td class="num">4.0</td>
+          <td class="num">48万+</td>
+          <td class="num">393</td>
+          <td class="num">5年</td>
+          <td class="num big">81.4</td>
+          <td><span class="tag tag-pass">全过</span></td>
+        </tr>
+        <tr data-tag="pass">
+          <td class="num">3</td>
+          <th scope="row" class="sticky-name">太力<span class="row-full">广东太力科技集团股份有限公司</span></th>
+          <td class="dim">布艺箱 · 压缩袋 · 密封罐 · 吸盘</td>
+          <td>中山注册/厂在湖北</td>
+          <td class="num strong">93%</td>
+          <td class="num">99%</td>
+          <td class="num">66%</td>
+          <td><span class="medal medal-三钻">三钻</span></td>
+          <td class="num">4.5</td>
+          <td class="num">3.0</td>
+          <td class="num">未披露</td>
+          <td class="num">未披露</td>
+          <td class="num">22年</td>
+          <td class="num big">80.5</td>
+          <td><span class="tag tag-pass">全过</span></td>
+        </tr>
+        <tr data-tag="pass">
+          <td class="num">4</td>
+          <th scope="row" class="sticky-name">艾佳<span class="row-full">潮州市潮安区彩塘镇艾佳不锈钢制品厂</span></th>
+          <td class="dim">密封储物罐（不锈钢线）</td>
+          <td>潮州</td>
+          <td class="num strong">98%</td>
+          <td class="num">100%</td>
+          <td class="num">52%</td>
+          <td><span class="medal medal-二钻">二钻</span></td>
+          <td class="num">4.5</td>
+          <td class="num">4.0</td>
+          <td class="num">未披露</td>
+          <td class="num">未披露</td>
+          <td class="num">12年</td>
+          <td class="num big">80.3</td>
+          <td><span class="tag tag-pass">全过</span></td>
+        </tr>
+        <tr data-tag="pass">
+          <td class="num">5</td>
+          <th scope="row" class="sticky-name">新佩尔森<span class="row-full">潮州市新佩尔森瓷业有限公司</span></th>
+          <td class="dim">陶瓷餐具套装 · 陶瓷杯碗</td>
+          <td>潮州</td>
+          <td class="num strong">94%</td>
+          <td class="num">97%</td>
+          <td class="num">60%</td>
+          <td><span class="medal medal-一钻">一钻</span></td>
+          <td class="num">4.5</td>
+          <td class="num">3.0</td>
+          <td class="num">13万+</td>
+          <td class="num">1203</td>
+          <td class="num">12年</td>
+          <td class="num big">79.9</td>
+          <td><span class="tag tag-pass">全过</span></td>
+        </tr>
+        <tr data-tag="pass">
+          <td class="num">6</td>
+          <th scope="row" class="sticky-name">火之狐<span class="row-full">揭阳市火之狐五金制品有限公司</span></th>
+          <td class="dim">不锈钢餐具（走量设计款）</td>
+          <td>揭阳</td>
+          <td class="num strong">99%</td>
+          <td class="num">100%</td>
+          <td class="num">59%</td>
+          <td><span class="medal medal-一钻">一钻</span></td>
+          <td class="num">4.5</td>
+          <td class="num">4.0</td>
+          <td class="num">12万+</td>
+          <td class="num">360</td>
+          <td class="num">8年</td>
+          <td class="num big">79.7</td>
+          <td><span class="tag tag-pass">全过</span></td>
+        </tr>
+        <tr data-tag="pass">
+          <td class="num">7</td>
+          <th scope="row" class="sticky-name">悠优<span class="row-full">东莞市悠优电子科技有限公司</span></th>
+          <td class="dim">冰箱收纳盒（硅胶线）</td>
+          <td>东莞</td>
+          <td class="num strong">99%</td>
+          <td class="num">100%</td>
+          <td class="num">78%</td>
+          <td><span class="medal medal-二钻">二钻</span></td>
+          <td class="num">4.5</td>
+          <td class="num">4.0</td>
+          <td class="num">未披露</td>
+          <td class="num">未披露</td>
+          <td class="num">5年</td>
+          <td class="num big">79.1</td>
+          <td><span class="tag tag-pass">全过</span></td>
+        </tr>
+        <tr data-tag="pass">
+          <td class="num">8</td>
+          <th scope="row" class="sticky-name">盛兆<span class="row-full">广州市盛兆日用品实业有限公司</span></th>
+          <td class="dim">保冷杯 · 塑料杯（全价位）</td>
+          <td>广州</td>
+          <td class="num strong">86%</td>
+          <td class="num">100%</td>
+          <td class="num">60%</td>
+          <td><span class="medal medal-二钻">二钻</span></td>
+          <td class="num">4.5</td>
+          <td class="num">3.3</td>
+          <td class="num">未披露</td>
+          <td class="num">未披露</td>
+          <td class="num">15年</td>
+          <td class="num big">78.0</td>
+          <td><span class="tag tag-pass">全过</span></td>
+        </tr>
+        <tr data-tag="pass">
+          <td class="num">9</td>
+          <th scope="row" class="sticky-name">白塔瓷五厂<span class="row-full">潮州市枫溪白塔瓷五厂</span></th>
+          <td class="dim">陶瓷餐具套装</td>
+          <td>潮州</td>
+          <td class="num strong">90%</td>
+          <td class="num">100%</td>
+          <td class="num">54%</td>
+          <td><span class="medal medal-一钻">一钻</span></td>
+          <td class="num">4.0</td>
+          <td class="num">3.0</td>
+          <td class="num">5万+</td>
+          <td class="num">231</td>
+          <td class="num">34年</td>
+          <td class="num big">77.4</td>
+          <td><span class="tag tag-pass">全过</span></td>
+        </tr>
+        <tr data-tag="pass">
+          <td class="num">10</td>
+          <th scope="row" class="sticky-name">家之旺<span class="row-full">潮州市家之旺五金制品有限公司</span></th>
+          <td class="dim">厨房置物架 · 吸盘置物架</td>
+          <td>潮州</td>
+          <td class="num strong">88%</td>
+          <td class="num">100%</td>
+          <td class="num">52%</td>
+          <td><span class="medal medal-一钻">一钻</span></td>
+          <td class="num">5.0</td>
+          <td class="num">3.7</td>
+          <td class="num">6万+</td>
+          <td class="num">399</td>
+          <td class="num">10年</td>
+          <td class="num big">76.0</td>
+          <td><span class="tag tag-pass">全过</span></td>
+        </tr>
+        <tr data-tag="test">
+          <td class="num">11</td>
+          <th scope="row" class="sticky-name">蓝天<span class="row-full">广东蓝天塑料制品有限公司</span></th>
+          <td class="dim">收纳盒（塑料）</td>
+          <td>揭阳揭西</td>
+          <td class="num strong">84%</td>
+          <td class="num">100%</td>
+          <td class="num">53%</td>
+          <td><span class="medal medal-一钻">一钻</span></td>
+          <td class="num">4.0</td>
+          <td class="num">2.0</td>
+          <td class="num">1万+</td>
+          <td class="num">321</td>
+          <td class="num">13年</td>
+          <td class="num big">73.8</td>
+          <td><span class="tag tag-test">待实测</span></td>
+        </tr>
+        <tr data-tag="test">
+          <td class="num">12</td>
+          <th scope="row" class="sticky-name">丹特美<span class="row-full">潮州市潮安区东凤丹特美不锈钢制品厂</span></th>
+          <td class="dim">保冷杯（低价走量款）</td>
+          <td>潮州</td>
+          <td class="num strong">83%</td>
+          <td class="num">100%</td>
+          <td class="num">39%</td>
+          <td><span class="medal medal-一钻">一钻</span></td>
+          <td class="num">4.5</td>
+          <td class="num">4.3</td>
+          <td class="num">未披露</td>
+          <td class="num">未披露</td>
+          <td class="num">12年</td>
+          <td class="num big">73.7</td>
+          <td><span class="tag tag-test">待实测</span></td>
+        </tr>
+        <tr data-tag="pass">
+          <td class="num">13</td>
+          <th scope="row" class="sticky-name">新诗图<span class="row-full">潮州市新诗图日用品有限公司</span></th>
+          <td class="dim">免打孔挂钩（全材质）</td>
+          <td>潮州</td>
+          <td class="num strong">88%</td>
+          <td class="num">99%</td>
+          <td class="num">53%</td>
+          <td><span class="medal medal-一钻">一钻</span></td>
+          <td class="num">4.5</td>
+          <td class="num">3.0</td>
+          <td class="num">5万+</td>
+          <td class="num">173</td>
+          <td class="num">5年</td>
+          <td class="num big">72.2</td>
+          <td><span class="tag tag-pass">全过</span></td>
+        </tr>
+        <tr data-tag="pass">
+          <td class="num">14</td>
+          <th scope="row" class="sticky-name">乐兴<span class="row-full">东莞市石排乐兴家居用品厂</span></th>
+          <td class="dim">布艺收纳箱</td>
+          <td>东莞</td>
+          <td class="num strong">90%</td>
+          <td class="num">100%</td>
+          <td class="num">55%</td>
+          <td><span class="medal medal-一钻">一钻</span></td>
+          <td class="num">4.0</td>
+          <td class="num">3.5</td>
+          <td class="num">1万+</td>
+          <td class="num">69</td>
+          <td class="num">11年</td>
+          <td class="num big">72.0</td>
+          <td><span class="tag tag-pass">全过</span></td>
+        </tr>
+        <tr data-tag="test">
+          <td class="num">15</td>
+          <th scope="row" class="sticky-name">皇星<span class="row-full">广东皇星婴童用品有限公司</span></th>
+          <td class="dim">保冷杯（中高端/母婴跨境）</td>
+          <td>河源</td>
+          <td class="num strong">83%</td>
+          <td class="num">99%</td>
+          <td class="num">43%</td>
+          <td><span class="medal medal-三钻">三钻</span></td>
+          <td class="num">5.0</td>
+          <td class="num">4.0</td>
+          <td class="num">未披露</td>
+          <td class="num">未披露</td>
+          <td class="num">3年</td>
+          <td class="num big">71.1</td>
+          <td><span class="tag tag-test">待实测</span></td>
+        </tr>
+        <tr data-tag="pass">
+          <td class="num">16</td>
+          <th scope="row" class="sticky-name">爱优汇<span class="row-full">深圳爱优汇家居有限公司（列表名广东爱优汇科技）</span></th>
+          <td class="dim">密封罐 · 冰箱盒 · 塑料挂钩</td>
+          <td>深圳</td>
+          <td class="num strong">96%</td>
+          <td class="num">100%</td>
+          <td class="num">57%</td>
+          <td><span class="medal medal-铜牌">铜牌</span></td>
+          <td class="num">4.5</td>
+          <td class="num">3.7</td>
+          <td class="num">未披露</td>
+          <td class="num">未披露</td>
+          <td class="num">5年</td>
+          <td class="num big">70.1</td>
+          <td><span class="tag tag-pass">全过</span></td>
+        </tr>
+        <tr data-tag="bench">
+          <td class="num">17</td>
+          <th scope="row" class="sticky-name">台山光速<span class="row-full">台山市光速五金制品有限公司</span></th>
+          <td class="dim">冷变铝杯（差异化独家品类）</td>
+          <td>江门台山</td>
+          <td class="num strong">78%</td>
+          <td class="num">100%</td>
+          <td class="num">58%</td>
+          <td><span class="medal medal-牛头无牌">牛头无牌</span></td>
+          <td class="num">4.0</td>
+          <td class="num">5.0</td>
+          <td class="num">1万+</td>
+          <td class="num">103</td>
+          <td class="num">9年</td>
+          <td class="num big">68.4</td>
+          <td><span class="tag tag-bench">备胎</span></td>
+        </tr>
+        <tr data-tag="test">
+          <td class="num">18</td>
+          <th scope="row" class="sticky-name">心雅<span class="row-full">东莞心雅家居用品有限公司</span></th>
+          <td class="dim">免打孔挂钩（不锈钢线）</td>
+          <td>东莞</td>
+          <td class="num strong">84%</td>
+          <td class="num">99%</td>
+          <td class="num">60%</td>
+          <td><span class="medal medal-牛头无牌">牛头无牌</span></td>
+          <td class="num">4.0</td>
+          <td class="num">2.7</td>
+          <td class="num">1万+</td>
+          <td class="num">未披露</td>
+          <td class="num">8年</td>
+          <td class="num big">67.0</td>
+          <td><span class="tag tag-test">待实测</span></td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<section id="matrix">
+  <h2><span class="no">03</span>十方向首选矩阵</h2>
+  <p class="sec-desc">每个选品方向的首选与二供，可直接据此下单/询盘。标 ⚠ 的首选需先通过询盘实测再放量。</p>
+  <div class="matrix">
+    <div class="mcard warn"><h3>1 · 收纳盒</h3>
+      <div class="pick">首选：<b>蓝天</b><span class="pct">84% 待实测</span></div>
+      <div class="pick alt">备选：嘉尔纳（84% 待实测）</div></div>
+    <div class="mcard"><h3>2 · 布艺收纳箱</h3>
+      <div class="pick">首选：<b>乐兴</b><span class="pct">90%</span> 东莞本地</div>
+      <div class="pick alt">二供：<b>太力</b><span class="pct">93%</span> 品牌/厂在湖北</div></div>
+    <div class="mcard"><h3>3 · 杯壶保冷杯</h3>
+      <div class="pick">首选：<b>盛兆</b><span class="pct">86%</span> 全价位</div>
+      <div class="pick alt">备选：丹特美/皇星 <span class="pct">83% 待实测</span></div></div>
+    <div class="mcard"><h3>4 · 密封储物罐</h3>
+      <div class="pick">首选：<b>艾佳</b><span class="pct">98%</span> 不锈钢线</div>
+      <div class="pick alt">并列：<b>爱优汇</b><span class="pct">96%</span> 塑料线</div></div>
+    <div class="mcard"><h3>5 · 冰箱收纳盒</h3>
+      <div class="pick">首选：<b>悠优</b><span class="pct">99%</span> 硅胶线</div>
+      <div class="pick alt">二供：<b>爱优汇</b><span class="pct">96%</span> 塑料线</div></div>
+    <div class="mcard"><h3>6 · 厨房置物架</h3>
+      <div class="pick">首选：<b>腾烨</b><span class="pct">98%</span></div>
+      <div class="pick alt">二供：<b>家之旺</b><span class="pct">88%</span></div></div>
+    <div class="mcard"><h3>7 · 免打孔挂钩</h3>
+      <div class="pick">首选：<b>新诗图</b><span class="pct">88%</span> 全材质</div>
+      <div class="pick alt">备选：宏兴<span class="pct">98%</span>待询盘 / 心雅<span class="pct">84%</span>待实测</div></div>
+    <div class="mcard"><h3>8 · 陶瓷餐具套装</h3>
+      <div class="pick">首选：<b>新佩尔森</b><span class="pct">94%</span> 品牌+自产</div>
+      <div class="pick alt">二供：<b>白塔瓷五厂</b><span class="pct">90%</span> 产能王</div></div>
+    <div class="mcard"><h3>9 · 不锈钢餐具</h3>
+      <div class="pick">首选：<b>业德品诚</b><span class="pct">96%</span> 品质线</div>
+      <div class="pick alt">二供：<b>火之狐</b><span class="pct">99%</span> 走量线</div></div>
+    <div class="mcard"><h3>10 · 吸盘置物架</h3>
+      <div class="pick">首选：<b>腾烨</b><span class="pct">98%</span>（复用）</div>
+      <div class="pick alt">二供：<b>家之旺</b><span class="pct">88%</span> / 宏兴 / 太力（复用）</div></div>
+    <div class="mcard warn"><h3>＋ 冷变铝杯（差异化）</h3>
+      <div class="pick">仅候选：<b>台山光速</b><span class="pct">78% 备胎</span></div>
+      <div class="pick alt">上新品类时询盘实测过线再启用</div></div>
+  </div>
+</section>
+
+<section id="levers">
+  <h2><span class="no">04</span>跨方向复用厂（供应链整合优先谈）</h2>
+  <p class="sec-desc">一家打通多个选品方向，集中下单利于议价、摊薄对接成本、统一账期与售后。爱优汇虽总分 16，但整合价值最高，建议优先建立直连。</p>
+  <div class="levers">
+    <div class="lever"><div class="lname">爱优汇</div><div class="ldir">密封罐 · 冰箱盒 · 塑料挂钩（3 方向）</div><p>96%/100%，自有注塑，杂货自产王。先核实广东科技/深圳家居两主体关系。</p></div>
+    <div class="lever"><div class="lname">腾烨</div><div class="ldir">厨房置物架 · 吸盘置物架（2 方向）</div><p>98%/综合5.0/定制48万，架类首选，吸盘承重随首单一起验。</p></div>
+    <div class="lever"><div class="lname">家之旺</div><div class="ldir">厨房置物架 · 吸盘置物架（2 方向）</div><p>88%/100%，7.1万件量大；问清主体年限矛盾。</p></div>
+    <div class="lever"><div class="lname">太力</div><div class="ldir">布艺箱 · 压缩袋 · 密封罐 · 吸盘（4 品类）</div><p>三钻品牌集团，一供打通箱+袋；厂在湖北，小B承接弱需试样。</p></div>
+    <div class="lever"><div class="lname">宏兴</div><div class="ldir">免打孔挂钩 · 吸盘技术线</div><p>98%/品质5.0 满分、24年TÜV厂；但履约率/定制均「暂无数据」，询盘三问后定去留。</p></div>
+  </div>
+</section>
+
+<section id="inquiry">
+  <h2><span class="no">05</span>询盘 / 实测行动清单</h2>
+  <p class="sec-desc">下单放量前必须逐条闭环。前两组决定待实测厂家能否转正，后三组为全部食品接触与实体厂的通用动作。</p>
+
+  <div class="inq-group">
+    <h3>A · 待实测厂家（响应率 83–84%）<span class="g-tag tag-test">询盘后重算排名</span></h3>
+    <div class="chk"><span class="box"></span><div><b>蓝天塑料</b>（84%·收纳盒）——发真实小B询盘测响应时效；<span class="meta">品质2.0全场最低，必须先小批量试样，45000㎡大厂值得救。</span></div></div>
+    <div class="chk"><span class="box"></span><div><b>丹特美</b>（83%·杯走量）——测响应 + 索304检测报告；<span class="meta">回头39%最低，关注复购与售后承诺。</span></div></div>
+    <div class="chk"><span class="box"></span><div><b>皇星婴童</b>（83%·杯中高端）——测响应；<span class="meta">确认河源厂小B代发承接与MOQ。</span></div></div>
+    <div class="chk"><span class="box"></span><div><b>心雅家居</b>（84%·挂钩不锈钢线）——测响应 + 实测发货时效；<span class="meta">品质2.7/物流2.4双低，即使过线也仅作新诗图之后的备选。</span></div></div>
+  </div>
+
+  <div class="inq-group">
+    <h3>B · 主体沿革 / 数据矛盾必问<span class="g-tag tag-pass">7/7 厂也要问</span></h3>
+    <div class="chk"><span class="box"></span><div><b>业德品诚</b>——入驻12年 vs 工商2018.9成立，问清经营主体沿革。</div></div>
+    <div class="chk"><span class="box"></span><div><b>家之旺</b>——入驻10年 vs 工商2022.6成立，问清是否换过主体。</div></div>
+    <div class="chk"><span class="box"></span><div><b>爱优汇</b>——列表「广东爱优汇科技」vs 进店实名「深圳爱优汇家居」，核实两主体关系与开票主体。</div></div>
+    <div class="chk"><span class="box"></span><div><b>宏兴</b>三问——①小B一件代发是否真接、MOQ多少；②近30天履约真实数据；③吸盘承重检测报告。</div></div>
+  </div>
+
+  <div class="inq-group">
+    <h3>C · 食品接触安全（GB 4806 系列，下单前统一索取）<span class="g-tag tag-pass">强制</span></h3>
+    <div class="chk"><span class="box"></span><div><b>揭阳不锈钢餐具</b>（业德/火之狐）——201充304重灾区，除GB4806外必须药水/光谱实测材质。</div></div>
+    <div class="chk"><span class="box"></span><div><b>304/316 杯壶与罐</b>（盛兆/丹特美/艾佳/腾烨宣传款/家之旺）——索GB4806 + 材质检测。</div></div>
+    <div class="chk"><span class="box"></span><div><b>塑料/硅胶/陶瓷</b>（爱优汇PET/PP、悠优硅胶、新佩尔森/白塔釉面）——索对应GB4806/FCM，陶瓷加验釉面与包装破损率。</div></div>
+  </div>
+
+  <div class="inq-group">
+    <h3>D · 首单常规验证</h3>
+    <div class="chk"><span class="box"></span><div>全部意向厂首单一律<b>小批量试样</b>，验做工、包装、48h发货与退换响应（火之狐另测在途时效，白塔/佩尔森验釉面包装，新诗图验胶贴承重）。</div></div>
+    <div class="chk"><span class="box"></span><div>核对 MOQ≤100、一件代发真实承接、48h发货、7天无理由与代发运费（含太力小B承接、乐兴布艺做工）。</div></div>
+  </div>
+</section>
+
+<section id="model">
+  <h2><span class="no">06</span>评分模型与口径</h2>
+  <p class="sec-desc">总分 100，10 个维度。响应/履约为 7 项硬指标中的两条红线，权重最高；牌级认证反映平台背书与验厂深度；地域给珠三角核心满分，河源/湖北厂折减。</p>
+  <div class="weights">
+    <span class="wchip">24h响应率 <b>20</b></span>
+    <span class="wchip">近30天履约率 <b>15</b></span>
+    <span class="wchip">回头率 <b>10</b></span>
+    <span class="wchip">牌级·认证 <b>15</b></span>
+    <span class="wchip">综合服务 <b>5</b></span>
+    <span class="wchip">品质体验 <b>10</b></span>
+    <span class="wchip">定制合约 <b>5</b></span>
+    <span class="wchip">意向客户 <b>5</b></span>
+    <span class="wchip">珠三角地域 <b>5</b></span>
+    <span class="wchip">诚信年限 <b>10</b></span>
+  </div>
+  <ul class="tight note">
+    <li>牌级赋分：三钻15 / 二钻13 / 一钻10 / 铜牌7 / 牛头无牌6；全部上榜厂均为生产型[已认证] + SGS、TÜV莱茵或 Intertek 深度验厂。</li>
+    <li>待实测 4 家真实响应率为 83–84%，评分时按 85% 条件分给参考分，询盘后以实测值重算，名次会下移。</li>
+    <li>定制合约/意向客户缺失记中位；年限按诚信通或工商成立年孰可核验者计。</li>
+    <li>评分为平台公开数据的横向参考，不替代首单试样与合同尽调；交易请以1688平台担保交易为准。</li>
+  </ul>
+  <div class="callout accent" style="margin-top:18px">
+    <h3>使用建议（一句话）</h3>
+    <p>先与 <b>业德 / 腾烨 / 艾佳 / 新佩尔森 / 悠优</b> 五家总分 79+ 且全过硬指标的各方向首选建直连试样；同时把 <b>爱优汇、太力</b> 作为多品类整合谈判对象；待实测 4 家用一轮询盘统一回收真实响应率后再定去留。</p>
+  </div>
+</section>
+
+<footer>
+  数据源：1688 平台公开店铺/商品/深度验厂信息，人工按「广东+一件代发+48H发货+销量排序」逐屏截图核验 · 建档 208 条见《供应商候选库.csv》· 本页《suppliers_top20.csv》同目录 · 统计日期 2026-09-16。
+</footer>
+
+</div>
+<script>
+(function(){
+  try{
+    var btns=document.querySelectorAll('button.filter');
+    var rows=document.querySelectorAll('.bar-row, tbody tr');
+    btns.forEach(function(btn){
+      btn.addEventListener('click',function(){
+        btns.forEach(function(b){b.setAttribute('aria-pressed','false');});
+        btn.setAttribute('aria-pressed','true');
+        var f=btn.getAttribute('data-f');
+        rows.forEach(function(r){
+          var show=(f==='all')||(r.getAttribute('data-tag')===f);
+          r.classList.toggle('is-hidden',!show);
+        });
+      });
+    });
+  }catch(e){/* 静态内容仍可完整阅读 */}
+})();
+</script>
+</body>
+</html>

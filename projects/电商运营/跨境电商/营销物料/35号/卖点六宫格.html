@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<style>
+  @font-face {
+    font-family: 'Thai';
+    src: url('file:///usr/share/fonts/truetype/noto/NotoSansThai-Regular.ttf') format('truetype');
+    font-weight: 400;
+  }
+  @font-face {
+    font-family: 'Thai';
+    src: url('file:///usr/share/fonts/truetype/noto/NotoSansThai-Bold.ttf') format('truetype');
+    font-weight: 700;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body {
+    width:1080px; height:760px;
+    background:#ffffff;
+    font-family:'Thai','DejaVu Sans',sans-serif;
+    display:flex; align-items:center; justify-content:center;
+  }
+  .card {
+    width:1000px; height:680px;
+    background:#fafafa;
+    border-radius:36px;
+    padding:44px 40px;
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    grid-template-rows:repeat(2,1fr);
+    gap:24px;
+  }
+  .cell {
+    background:#fff;
+    border-radius:24px;
+    display:flex; flex-direction:column;
+    align-items:center; justify-content:center;
+    padding:18px 12px;
+  }
+  .ico { width:96px; height:96px; margin-bottom:18px; }
+  .ico svg { width:100%; height:100%; display:block; }
+  .th {
+    font-size:29px; font-weight:700; color:#111;
+    letter-spacing:0.2px; line-height:1.35;
+    text-align:center;
+  }
+  .en {
+    font-size:17px; font-weight:400; color:#8a8a8a;
+    letter-spacing:0.6px; margin-top:6px;
+    text-align:center;
+  }
+  .stroke { fill:none; stroke:#111; stroke-width:5; stroke-linecap:round; stroke-linejoin:round; }
+  .fill { fill:#111; }
+</style>
+</head>
+<body>
+<div class="card">
+
+  <!-- 1 超大容量 -->
+  <div class="cell">
+    <div class="ico"><svg viewBox="0 0 100 100">
+      <rect class="stroke" x="12" y="26" width="76" height="58" rx="8"/>
+      <path class="stroke" d="M12 44h76"/>
+      <path class="stroke" d="M30 26v18M70 26v18"/>
+      <path class="stroke" d="M34 60h32M34 70h20"/>
+    </svg></div>
+    <div class="th">ความจุขนาดใหญ่</div>
+    <div class="en">HIGH CAPACITY</div>
+  </div>
+
+  <!-- 2 轻松折叠 -->
+  <div class="cell">
+    <div class="ico"><svg viewBox="0 0 100 100">
+      <rect class="stroke" x="24" y="42" width="52" height="16" rx="4"/>
+      <rect class="stroke" x="18" y="66" width="64" height="14" rx="4"/>
+      <path class="stroke" d="M50 8v18M50 8l-7 7M50 8l7 7"/>
+      <path class="stroke" d="M50 92V74M50 92l-7-7M50 92l7-7"/>
+    </svg></div>
+    <div class="th">พับเก็บง่าย</div>
+    <div class="en">EASY TO FOLD</div>
+  </div>
+
+  <!-- 3 承重力强 -->
+  <div class="cell">
+    <div class="ico"><svg viewBox="0 0 100 100">
+      <path class="stroke" d="M38 50h24"/>
+      <rect class="stroke" x="22" y="36" width="14" height="28" rx="4"/>
+      <rect class="stroke" x="64" y="36" width="14" height="28" rx="4"/>
+      <rect class="stroke" x="10" y="42" width="10" height="16" rx="3"/>
+      <rect class="stroke" x="80" y="42" width="10" height="16" rx="3"/>
+    </svg></div>
+    <div class="th">รองรับน้ำหนักได้ดี</div>
+    <div class="en">STRONG LOAD-BEARING</div>
+  </div>
+
+  <!-- 4 分区收纳 -->
+  <div class="cell">
+    <div class="ico"><svg viewBox="0 0 100 100">
+      <rect class="stroke" x="14" y="28" width="72" height="50" rx="6"/>
+      <path class="stroke" d="M38 28v50M62 28v50"/>
+      <path class="stroke" d="M14 46h72"/>
+      <circle class="fill" cx="26" cy="37" r="3.5"/>
+      <circle class="fill" cx="50" cy="37" r="3.5"/>
+      <circle class="fill" cx="74" cy="37" r="3.5"/>
+    </svg></div>
+    <div class="th">แบ่งช่องจัดเก็บ</div>
+    <div class="en">COMPARTMENT STORAGE</div>
+  </div>
+
+  <!-- 5 易擦拭清洁（原"防水防潮"已删除：厂家 2026-11-05 明确回复无涂层，纯牛津布） -->
+  <div class="cell">
+    <div class="ico"><svg viewBox="0 0 100 100">
+      <rect class="stroke" x="22" y="34" width="56" height="40" rx="6"/>
+      <path class="stroke" d="M32 54c6-7 12-7 18 0s12 7 18 0"/>
+    </svg></div>
+    <div class="th">เช็ดทำความสะอาดง่าย</div>
+    <div class="en">EASY TO CLEAN</div>
+  </div>
+
+  <!-- 6 夜间反光 -->
+  <div class="cell">
+    <div class="ico"><svg viewBox="0 0 100 100">
+      <rect class="fill" x="26" y="44" width="48" height="14" rx="4"/>
+      <path class="stroke" d="M50 30v-8M50 78v-8M30 36l-5-5M70 36l5-5M30 66l-5 5M70 66l5 5M18 51h-6M88 51h-6"/>
+    </svg></div>
+    <div class="th">สะท้อนแสงกลางคืน</div>
+    <div class="en">NIGHT REFLECTIVE</div>
+  </div>
+
+</div>
+</body>
+</html>

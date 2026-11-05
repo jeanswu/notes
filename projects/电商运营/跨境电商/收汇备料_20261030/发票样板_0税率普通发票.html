@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    width: 1080px;
+    background: #fff;
+    font-family: "Songti SC", "SimSun", "宋体", serif;
+    color: #111;
+    padding: 44px 56px 36px;
+  }
+  .title {
+    text-align: center;
+    font-size: 40px;
+    letter-spacing: 14px;
+    font-weight: 700;
+    color: #b3181e;
+    margin-bottom: 6px;
+  }
+  .subtitle {
+    text-align: center;
+    font-size: 15px;
+    color: #b3181e;
+    letter-spacing: 2px;
+    margin-bottom: 16px;
+  }
+  .meta {
+    display: flex;
+    justify-content: space-between;
+    font-size: 15px;
+    margin-bottom: 10px;
+    line-height: 1.9;
+  }
+  .meta .right { text-align: right; }
+  .frame {
+    border: 2px solid #b3181e;
+    padding: 16px 18px 10px;
+  }
+  .party {
+    display: flex;
+    gap: 18px;
+    font-size: 14px;
+    line-height: 1.95;
+    margin-bottom: 12px;
+  }
+  .party .col { flex: 1; }
+  .party .lbl { display: inline-block; width: 96px; color: #333; }
+  .party .val { font-weight: 600; }
+  .pwd {
+    width: 250px;
+    border: 1px dashed #999;
+    font-size: 11px;
+    color: #888;
+    padding: 8px;
+    text-align: center;
+    line-height: 1.6;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 13.5px;
+  }
+  th, td {
+    border: 1px solid #444;
+    padding: 9px 8px;
+    text-align: center;
+    line-height: 1.5;
+  }
+  th { background: #fafafa; font-weight: 600; }
+  td.left { text-align: left; }
+  .sum-row td { text-align: right; font-weight: 600; }
+  .total {
+    margin-top: 10px;
+    font-size: 15px;
+    line-height: 2;
+    padding: 8px 4px;
+    border-top: 1px solid #444;
+  }
+  .total .cn { font-weight: 700; }
+  .remark {
+    margin-top: 12px;
+    font-size: 13.5px;
+    line-height: 1.9;
+    border-top: 1px solid #444;
+    padding-top: 10px;
+  }
+  .remark .lbl { display: inline-block; width: 60px; }
+  .footer {
+    margin-top: 18px;
+    display: flex;
+    justify-content: space-between;
+    font-size: 14px;
+    padding: 0 8px;
+  }
+  .stamp {
+    position: relative;
+    text-align: right;
+    margin-top: 4px;
+    font-size: 13px;
+    color: #b3181e;
+  }
+</style>
+</head>
+<body>
+
+<div class="title">广东增值税普通发票</div>
+<div class="subtitle">（电子普通发票 · 格式确认样板）</div>
+
+<div class="meta">
+  <div class="left">
+    发票代码：044002600111<br>
+    发票号码：26103088<br>
+    校验码：0626 8891 4432 7751 0029
+  </div>
+  <div class="right">
+    机器编号：6618 0032 9911<br>
+    开票日期：2026年11月20日
+  </div>
+</div>
+
+<div class="frame">
+
+  <div class="party">
+    <div class="col">
+      <span class="lbl">购 买 方</span><span class="val">名　　称：</span>境外客户（TikTok Shop 泰国站消费者）<br>
+      <span class="lbl"></span><span class="val">纳税人识别号：</span>—（境外主体）<br>
+      <span class="lbl"></span><span class="val">地 址、电 话：</span>—<br>
+      <span class="lbl"></span><span class="val">开户行及账号：</span>—
+    </div>
+    <div class="pwd">
+      密码区<br>
+      （电子发票以版式文件为准）<br>
+      04 + 07 99 12 8834 6612 9087<br>
+      31 4452 &lt; 6 7 0 2 8 9 1
+    </div>
+  </div>
+
+  <table>
+    <tr>
+      <th style="width:26%">货物或应税劳务、服务名称</th>
+      <th style="width:16%">规格型号</th>
+      <th style="width:8%">单位</th>
+      <th style="width:9%">数量</th>
+      <th style="width:12%">单价</th>
+      <th style="width:13%">金额</th>
+      <th style="width:7%">税率</th>
+      <th style="width:9%">税额</th>
+    </tr>
+    <tr>
+      <td class="left">收纳箱（折叠式后备箱整理箱）</td>
+      <td>35×35×30cm</td>
+      <td>个</td>
+      <td>20</td>
+      <td>100.81</td>
+      <td>2016.20</td>
+      <td>0%</td>
+      <td>0.00</td>
+    </tr>
+    <tr>
+      <td class="left">&nbsp;</td><td></td><td></td><td></td><td></td><td></td><td></td><td></td>
+    </tr>
+    <tr class="sum-row">
+      <td colspan="5" style="text-align:right">合　计</td>
+      <td>￥2016.20</td>
+      <td></td>
+      <td>￥0.00</td>
+    </tr>
+  </table>
+
+  <div class="total">
+    <span class="cn">价税合计（大写）</span>　<span class="cn" style="letter-spacing:2px">贰仟零壹拾陆元贰角整</span>　　<span style="float:right">（小写）￥2016.20</span>
+  </div>
+
+  <div class="party" style="margin-top:14px;margin-bottom:6px">
+    <div class="col">
+      <span class="lbl">销 售 方</span><span class="val">名　　称：</span><span class="val" style="font-weight:700">[我方主体]</span><br>
+      <span class="lbl"></span><span class="val">纳税人识别号：</span>91442000MAKNTX5D0X<br>
+      <span class="lbl"></span><span class="val">地 址、电 话：</span>广东省中山市（详见营业执照）<br>
+      <span class="lbl"></span><span class="val">开户行及账号：</span>中国建设银行股份有限公司中山东区支行　4405…2991
+    </div>
+  </div>
+
+  <div class="remark">
+    <span class="lbl">备　注</span>跨境电商零售出口（海关监管方式代码 9610）｜出口货物免征增值税｜
+    对应 TikTok Shop 泰国站订单 20 笔，出口报关单号详见随附出口记录清单
+  </div>
+
+</div>
+
+<div class="footer">
+  <div>收款人：[负责人]</div>
+  <div>复核：[负责人]</div>
+  <div>开票人：[负责人]</div>
+</div>
+
+<div class="stamp">（此件为格式确认样板，正式发票以电子税务局开具的版式文件为准）</div>
+
+</body>
+</html>
